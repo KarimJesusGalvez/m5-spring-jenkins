@@ -23,27 +23,17 @@ pipeline {
     stage('Site') {
       steps {
         bat 'mvn site'
+        jacoco(buildOverBuild: true)
       }
     }
 
     stage('Sonar') {
-      parallel {
-        stage('Sonar') {
-          agent any
-          environment {
-            SONAR_TOKEN = 'e30762a883f108b2e9244959f3beb2e9a8d432f8'
-          }
-          steps {
-            bat 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=KarimJesusGalvez_m5-spring-jenkins'
-          }
-        }
-
-        stage('') {
-          steps {
-            jacoco()
-          }
-        }
-
+      agent any
+      environment {
+        SONAR_TOKEN = 'e30762a883f108b2e9244959f3beb2e9a8d432f8'
+      }
+      steps {
+        bat 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=KarimJesusGalvez_m5-spring-jenkins'
       }
     }
 
